@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import Header from "./Header";
+import Button from "./Button";
+import Box from "./Box";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app-container">
+     <Header title="Welcome To UpTheLoad!" />
+      <main className="content">
+        <div className="sidebar"></div>
+        <section className="info">
+          <h2>A Loading Scheme Generator for Everybody.</h2>
+
+          <Box title="How to use:">
+            <p>
+              Simply Input your Trailer and load specifications into the text fields, 
+              and let us do the rest!
+            </p> 
+          </Box>
+
+          <Box title="Pricing:">
+            <ul>
+              <li>$10.99 a month</li>
+              <li>Up to 5 Users</li>
+              <li>No Limit of Schemes Generated Per User</li>
+            </ul>
+          </Box>
+        </section>
+
+        <aside className="image">
+          <img src="loadTruck.jpg" alt="Trailer loading schemes" />
+          <Button label="Go to Page" />
+        </aside>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
