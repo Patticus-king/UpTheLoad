@@ -1,0 +1,120 @@
+.dimensions-row {
+  display: flex;
+  gap: 60px;
+  margin-top: 0px;
+}
+.dimensions-row label,
+.dimensions-row input {
+  width: 50px;
+  text-align: center;
+  box-sizing: border-box;
+}
+.button-row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 1em;
+}
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;  
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  background: #E5ECE9;
+  color: #2364AA;
+  border: 1.5px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 2.40em;
+  width: 325px;
+  margin: 0 8px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.card-header {
+  background: #2364AA;
+  color: #fff;
+  font-size: 1.25em;
+  font-weight: bold;
+  padding: 0.75em 1em;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  margin: -2em -2em 1em -2em;
+  text-align: center;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65em;
+}
+
+.save-btn {
+  background: #D9D9D9;
+  color: #2364AA;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1.5em;
+  font-size: 1em;
+  width: 2.5em;
+  height: 2.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.add-btn {
+  background: #D9D9D9;
+  color: #1766b5;
+  border: 2px solid #1766b5;
+  border-radius: 6px;
+  font-size: 1.2em;
+  width: 2em;
+  height: .5em;
+  padding: 1em 1.2em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.read-the-docs {
+  color: #888;
+}
