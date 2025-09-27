@@ -1,14 +1,17 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-<<<<<<< HEAD
-import Homepage from './Homepage.js'
-=======
-import App from './Input-PG.tsx'
->>>>>>> aaa38f164f19f752347547334f83728b04ce1711
+import React from "react";
+import ReactDOM from "react-dom/client";
+import './index.css';
+import Homepage from './Homepage';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import InputPg from "./Input-PG";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Homepage />
-  </StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/input" element={<InputPg />} />
+      </Routes>
+    </BrowserRouter>
+  </React.StrictMode>
+);
