@@ -1,17 +1,20 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import './index.css';
-import Homepage from './Homepage';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// If your Homepage file is .jsx, keep the .jsx extension here.
+// If it's .tsx, drop the extension.
+import Homepage from "./Homepage.jsx";
 import InputPg from "./Input-PG";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/input" element={<InputPg />} />
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+  </StrictMode>
 );

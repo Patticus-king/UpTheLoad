@@ -1,120 +1,461 @@
-.dimensions-row {
-  display: flex;
-  gap: 60px;
-  margin-top: 0px;
-}
-.dimensions-row label,
-.dimensions-row input {
-  width: 50px;
-  text-align: center;
-  box-sizing: border-box;
-}
-.button-row {
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  justify-content: flex-end;
-  margin-top: 1em;
-}
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;  
+/* ===== Light look + modal + load form tidy + click-through fix ===== */
+
+:root {
+  --bg: #eef2f5;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --heading: #1f2937;
+  --blue: #2563eb;
+  --blue-600: #1d4ed8;
+  --shadow: 0 10px 25px rgba(0,0,0,.08);
+  --text-strong: #111111;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+html, body, #root { height: 100%; }
+* { box-sizing: border-box; }
+button { font: inherit; }
+
+.light-page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  padding: 24px 16px 48px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.container { max-width: 1200px; margin: 0 auto; }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Cards row */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
 }
+@media (max-width: 980px) { .cards { grid-template-columns: 1fr; } }
 
+/* Card */
 .card {
-  background: #E5ECE9;
-  color: #2364AA;
-  border: 1.5px solid #ccc;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 2.40em;
-  width: 325px;
-  margin: 0 8px;
-  display: flex;
-  flex-direction: column;
-  text-align: left;
+  box-shadow: var(--shadow);
+  overflow: hidden;
 }
-
 .card-header {
-  background: #2364AA;
+  background: var(--blue);
   color: #fff;
-  font-size: 1.25em;
-  font-weight: bold;
-  padding: 0.75em 1em;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  margin: -2em -2em 1em -2em;
-  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  padding: 14px 18px;
 }
-
-.card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65em;
+.card-header.small {
+  background: var(--blue);
+  color: #fff;
+  font-size: 18px;
 }
+.card-body { padding: 16px; }
 
-.save-btn {
-  background: #D9D9D9;
-  color: #2364AA;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5em 1.5em;
-  font-size: 1em;
-  width: 2.5em;
-  height: 2.5em;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.add-btn {
-  background: #D9D9D9;
-  color: #1766b5;
-  border: 2px solid #1766b5;
+/* Inputs (high contrast) */
+.card input[type="number"],
+.card input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
-  font-size: 1.2em;
-  width: 2em;
-  height: .5em;
-  padding: 1em 1.2em;
-  cursor: pointer;
+  outline: none;
+  background: #ffffff;
+  color: var(--text-strong);
+}
+.card input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+}
+.card label {
+  font-size: 14px;
+  color: var(--text-strong);
+  display: grid;
+  gap: 6px;
+}
+.dimensions-row { display: grid; gap: 10px; }
+@media (min-width: 640px) { .dimensions-row { grid-template-columns: 1fr 1fr; } }
+
+/* Footer row under the cards */
+.footer-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 0;
+  gap: 12px;
+  margin-top: 18px;
+}
+.footer-row .spacer { flex: 1; }
+
+/* Buttons */
+.btn {
+  border-radius: 8px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .15s ease, background .15s ease;
+}
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn-primary {
+  color: #fff;
+  background: var(--blue);
+  border-color: var(--blue);
+  box-shadow: 0 6px 14px rgba(37,99,235,.25);
+}
+.btn-primary:hover { background: var(--blue-600); transform: translateY(-1px); }
+.btn-ghost {
+  color: var(--text-strong);
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+}
+.btn-ghost:hover { background: #f3f4f6; }
+
+/* Error text */
+.error-text { color: #b91c1c; font-size: 13px; }
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  z-index: 50;
+}
+.modal {
+  width: min(1000px, 95vw);
+  max-height: 90vh;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-close {
+  background: #fff;
+  border: 1px solid var(--border);
+  width: 32px; height: 32px; line-height: 30px;
+  border-radius: 50%;
+  cursor: pointer; font-size: 20px;
+}
+.modal-body { padding: 12px 16px; overflow: auto; color: var(--text-strong); }
+.summary-grid {
+  display: grid; gap: 6px; grid-template-columns: 1fr 1fr;
+  margin-bottom: 10px;
+}
+@media (max-width: 640px) { .summary-grid { grid-template-columns: 1fr; } }
+.svg-view {
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+  overflow: auto;
+}
+.modal-footer {
+  display: flex; gap: 10px; justify-content: flex-end;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
 }
 
-.read-the-docs {
-  color: #888;
+/* ===== Load form tidy layout ===== */
+.li-wrap { display: grid; gap: 14px; }
+
+.li-row {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  background: #fff;
+}
+
+.li-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 980px) { .li-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .li-grid { grid-template-columns: 1fr; } }
+
+.li-field { display: grid; gap: 6px; }
+.li-label { font-size: 13px; color: var(--text-strong); }
+
+.li-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.li-errors { margin-top: 8px; color: #b91c1c; font-size: 13px; }
+
+.li-footer {
+  display: flex; align-items: center; gap: 10px; margin-top: 6px;
+}
+.li-footer .li-totals { font-size: 13px; color: #374151; }
+
+/* ===== Fix: clickable inputs in Load card (z-index/pointer-events) ===== */
+.card .card-header { position: relative; z-index: 0; }
+.card .card-body { position: relative; z-index: 10; }
+
+.li-wrap,
+.li-row,
+.li-grid,
+.li-field,
+.li-field * {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+/* If any legacy grid scaffolding exists, don't let it intercept clicks */
+.grid-header, .grid-body {
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Kill accidental overlays from pseudo-elements */
+.card::before, .card::after,
+.card-body::before, .card-body::after,
+.li-row::before, .li-row::after {
+  content: none !important;
+  pointer-events: none !important;
+}
+
+/*************************************************************
+  Load Input Form — STABLE reset (no shadows / no z-index games)
+*************************************************************/
+
+/* create a clean stacking context so nothing outside can overlap */
+.card .card-body { position: relative; isolation: isolate; }
+
+/* container for all rows */
+.li-wrap {
+  display: grid;
+  gap: 16px;
+}
+
+/* each load row: simple box, no shadow, no z-index */
+.li-row {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+/* kill any pseudo overlays just in case */
+.li-row::before,
+.li-row::after {
+  content: none !important;
+}
+
+/* grid of fields inside a row */
+.li-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+}
+@media (max-width: 1100px) { .li-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+@media (max-width: 880px)  { .li-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 560px)  { .li-grid { grid-template-columns: 1fr; } }
+
+/* field block */
+.li-field { display: grid; gap: 6px; }
+
+/* label */
+.li-label {
+  font-size: 13px;
+  line-height: 1.2;
+  color: #374151; /* darker, readable */
+}
+
+/* inputs: high-contrast, no transforms, no odd effects */
+.li-field input[type="text"],
+.li-field input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  -moz-appearance: textfield; /* prevent wheel step on FF */
+  background-clip: padding-box;
+}
+.li-field input[type="number"]::-webkit-outer-spin-button,
+.li-field input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; margin: 0; /* hide spinners on webkit */
+}
+.li-field input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+/* row actions */
+.li-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* footer/totals */
+.li-footer {
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.li-totals { font-size: 13px; color: #596174; }
+
+/* simple buttons */
+.btn {
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.btn:hover { background: #f8fafc; border-color: #cfd6df; }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn-ghost { border: 1px solid #d1d5db; }
+
+/* inline error text */
+.li-errors { margin-top: 8px; color: #b91c1c; font-size: 13px; }
+
+/* safety: ensure nothing blocks clicks inside the load form */
+.li-wrap, .li-row, .li-grid, .li-field, .li-field * {
+  pointer-events: auto;
+}
+
+
+
+/* ─────────────────────────────────────────────────────────────
+   Trailer-only layout + Add Load CTA
+────────────────────────────────────────────────────────────── */
+.row-two {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 980px) {
+  .row-two { grid-template-columns: 1fr; }
+}
+
+.add-load-panel {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.add-load-cta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 2px dashed #c7d2fe;
+  background: #eef2ff;
+  color: #1e3a8a;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+}
+.add-load-cta .big-plus {
+  display: inline-grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: white;
+  font-size: 22px;
+  line-height: 1;
+}
+.add-load-cta:hover {
+  background: #e0e7ff;
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+}
+
+/* Load chips list (shows added loads) */
+.load-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #111;
+}
+.chip-label { font-size: 13px; }
+.chip-x {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  line-height: 18px;
+}
+
+/* Modal variant for the Add Load form */
+.modal.modal--narrow {
+  width: min(700px, 95vw);
+}
+
+/* Reuse the Load Form field styles for the modal body */
+.modal .li-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+}
+@media (max-width: 560px) { .modal .li-grid { grid-template-columns: 1fr; } }
+
+.modal .li-field {
+  display: grid;
+  gap: 6px;
+}
+.modal .li-label {
+  font-size: 13px;
+  color: #374151;
+}
+.modal .li-field input[type="text"],
+.modal .li-field input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  -moz-appearance: textfield;
+}
+.modal .li-field input[type="number"]::-webkit-outer-spin-button,
+.modal .li-field input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+.modal .li-field input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
 }

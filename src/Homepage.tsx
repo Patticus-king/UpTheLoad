@@ -1,7 +1,8 @@
 import "./Homepage.css";
-import Header from "./Header";
-import Button from "./Button";
-import Box from "./Box";
+import Header from "./Header.jsx";
+import Button from "./Button.jsx";
+import Box from "./Box.jsx";
+
 
 function App() {
   return (
