@@ -1,11 +1,10 @@
-// src/Input-PG.tsx
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Input-PG.css";
 
 import TrailerInfoForm, { type TrailerForm } from "./components/TrailerInfoForm";
 
-const API_URL = "http://127.0.0.1:5050/generate";
+const API_URL = "http://127.0.0.1:5000/generate";
 
 /** Numeric type the backend expects for each load */
 export type LoadItem = {
@@ -57,13 +56,13 @@ const parsePosInt = (s: string) => {
 };
 
 /* ─────────────────────────────────────────────────────────────
-   Load Modal (string state for smooth typing)
+   Load Modal (add / edit)
 ────────────────────────────────────────────────────────────── */
 type LoadModalProps = {
   open: boolean;
   onClose: () => void;
-  onSave: (load: LoadItem) => void;
-  initial?: Partial<LoadItem>; // to support future “edit” if needed
+  onSave: (load: LoadItem, editingId?: string) => void;
+  initial?: LoadItem | null;
 };
 
 function LoadModal({ open, onClose, onSave, initial }: LoadModalProps) {
@@ -81,17 +80,17 @@ function LoadModal({ open, onClose, onSave, initial }: LoadModalProps) {
 
   const [form, setForm] = useState<LoadS>({
     label: initial?.label ?? "",
-    unit_count: initial?.unit_count != null ? String(initial.unit_count) : "1",
-    unit_weight: initial?.unit_weight != null ? String(initial.unit_weight) : "1",
-    unit_length: initial?.unit_length != null ? String(initial.unit_length) : "1",
-    unit_width: initial?.unit_width != null ? String(initial.unit_width) : "1",
-    unit_height: initial?.unit_height != null ? String(initial.unit_height) : "1",
-    stack_height: initial?.stack_height != null ? String(initial.stack_height) : "1",
+    unit_count: initial ? String(initial.unit_count) : "1",
+    unit_weight: initial ? String(initial.unit_weight) : "1",
+    unit_length: initial ? String(initial.unit_length) : "1",
+    unit_width: initial ? String(initial.unit_width) : "1",
+    unit_height: initial ? String(initial.unit_height) : "1",
+    stack_height: initial ? String(initial.stack_height) : "1",
   });
 
   const parsed = useMemo(() => {
     const item: LoadItem = {
-      id: makeId(),
+      id: initial?.id ?? makeId(),
       label: form.label.trim() ? form.label.trim() : undefined,
       unit_count: parsePosInt(form.unit_count) || 0,
       unit_weight: parsePos(form.unit_weight) || 0,
@@ -108,7 +107,7 @@ function LoadModal({ open, onClose, onSave, initial }: LoadModalProps) {
     if (!pos(item.unit_height)) errs.push("Unit height must be > 0");
     if (!posInt(item.stack_height)) errs.push("Stack height must be ≥ 1");
     return { item, errs, valid: errs.length === 0 };
-  }, [form]);
+  }, [form, initial]);
 
   const set = (k: keyof LoadS, v: string) => setForm((p) => ({ ...p, [k]: v }));
 
@@ -116,7 +115,7 @@ function LoadModal({ open, onClose, onSave, initial }: LoadModalProps) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal modal--narrow" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3 style={{ margin: 0 }}>Add Load</h3>
+          <h3 style={{ margin: 0 }}>{initial ? "Edit Load" : "Add Load"}</h3>
           <button className="modal-close" aria-label="Close" onClick={onClose}>×</button>
         </div>
 
@@ -167,8 +166,12 @@ function LoadModal({ open, onClose, onSave, initial }: LoadModalProps) {
 
         <div className="modal-footer">
           <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" disabled={!parsed.valid} onClick={() => onSave(parsed.item)}>
-            Save Load
+          <button
+            className="btn btn-primary"
+            disabled={!parsed.valid}
+            onClick={() => onSave(parsed.item, initial?.id)}
+          >
+            {initial ? "Save Changes" : "Save Load"}
           </button>
         </div>
       </div>
@@ -205,19 +208,34 @@ export default function InputPg() {
 
   // Load Modal
   const [loadModalOpen, setLoadModalOpen] = useState(false);
+  const [editingLoad, setEditingLoad] = useState<LoadItem | null>(null);
 
   const handleTrailerChange = (data: TrailerForm, isValid: boolean) => {
     setTrailer(data);
     setTrailerValid(isValid);
   };
 
-  const addLoad = (item: LoadItem) => {
-    setLoads((prev) => [...prev, item]);
+  const handleSaveLoad = (item: LoadItem, editingId?: string) => {
+    if (editingId) {
+      // Update existing load
+      setLoads((prev) =>
+        prev.map((ld) => (ld.id === editingId ? item : ld))
+      );
+    } else {
+      // Add new load
+      setLoads((prev) => [...prev, item]);
+    }
     setLoadModalOpen(false);
+    setEditingLoad(null);
   };
 
   const removeLoad = (id: string) => {
     setLoads((prev) => prev.filter((x) => x.id !== id));
+  };
+
+  const editLoad = (ld: LoadItem) => {
+    setEditingLoad(ld);
+    setLoadModalOpen(true);
   };
 
   const canGenerate = trailerValid && hasLoads;
@@ -287,7 +305,6 @@ export default function InputPg() {
   return (
     <div className="light-page">
       <div className="container">
-
         {/* Row: Trailer card + Add Load CTA */}
         <div className="row-two">
           <div className="card">
@@ -297,7 +314,7 @@ export default function InputPg() {
           </div>
 
           <div className="add-load-panel">
-            <button className="add-load-cta" onClick={() => setLoadModalOpen(true)}>
+            <button className="add-load-cta" onClick={() => { setEditingLoad(null); setLoadModalOpen(true); }}>
               <span className="big-plus">+</span>
               <span>Add Load</span>
             </button>
@@ -306,7 +323,27 @@ export default function InputPg() {
             {loads.length > 0 && (
               <div className="load-chips">
                 {loads.map((ld) => (
-                  <div className="chip" key={ld.id} title={`${ld.unit_count} x ${ld.unit_length}×${ld.unit_width}×${ld.unit_height} (stack ${ld.stack_height})`}>
+                  <div
+                    className="chip"
+                    key={ld.id}
+                    title={`${ld.unit_count} x ${ld.unit_length}×${ld.unit_width}×${ld.unit_height} (stack ${ld.stack_height})`}
+                  >
+                    {/* Pencil icon for edit */}
+                    <button
+                      className="chip-edit"
+                      onClick={() => editLoad(ld)}
+                      title="Edit"
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        marginRight: 4,
+                        fontSize: 14,
+                      }}
+                    >
+                      ✏️
+                    </button>
+
                     <span className="chip-label">{ld.label || "Load"}</span>
                     <button className="chip-x" onClick={() => removeLoad(ld.id)}>×</button>
                   </div>
@@ -334,8 +371,9 @@ export default function InputPg() {
       {/* Load Modal */}
       <LoadModal
         open={loadModalOpen}
-        onClose={() => setLoadModalOpen(false)}
-        onSave={addLoad}
+        onClose={() => { setLoadModalOpen(false); setEditingLoad(null); }}
+        onSave={handleSaveLoad}
+        initial={editingLoad}
       />
 
       {/* Preview Modal */}
