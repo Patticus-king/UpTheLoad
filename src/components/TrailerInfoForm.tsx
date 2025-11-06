@@ -154,6 +154,9 @@ export default function TrailerInfoForm({
 
       {/* 🔹 Botones de presets */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "10px" }}>
+        <button type="button" className="btn btn-ghost" onClick={() => handlePresetClick("custom")}>
+          Custom / Manual
+        </button>
         <button type="button" className="btn btn-ghost" onClick={() => handlePresetClick("standardTruck")}>
           Standard Truck
         </button>
@@ -162,9 +165,6 @@ export default function TrailerInfoForm({
         </button>
         <button type="button" className="btn btn-ghost" onClick={() => handlePresetClick("van")}>
           Van
-        </button>
-        <button type="button" className="btn btn-ghost" onClick={() => handlePresetClick("custom")}>
-          Custom / Manual
         </button>
       </div>
 
