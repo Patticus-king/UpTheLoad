@@ -52,6 +52,48 @@ export default function TrailerInfoForm({
   const [formS, setFormS] = useState<TrailerFormStrings>(() => toStrs(value));
   const [touched, setTouched] = useState(false);
 
+  // 🔹 Presets (valores típicos)
+  const presets: Record<string, TrailerFormStrings> = {
+    custom: {
+      trailer_max_weight: "",
+      trailer_empty_weight: "",
+      deck_length: "",
+      deck_width: "",
+      axles: "1",
+      axle_weight_limit: "",
+    },
+    standardTruck: {
+      trailer_max_weight: "52000",
+      trailer_empty_weight: "12000",
+      deck_length: "636", // 53 ft
+      deck_width: "102",  // 8.5 ft
+      axles: "2",
+      axle_weight_limit: "20000",
+    },
+    smallTruck: {
+      trailer_max_weight: "20000",
+      trailer_empty_weight: "8000",
+      deck_length: "360", // 30 ft
+      deck_width: "96",
+      axles: "2",
+      axle_weight_limit: "10000",
+    },
+    van: {
+      trailer_max_weight: "10000",
+      trailer_empty_weight: "5000",
+      deck_length: "200", // 16.6 ft
+      deck_width: "84",
+      axles: "2",
+      axle_weight_limit: "5000",
+    },
+  };
+
+  // 🔹 Manejar selección de preset
+  const handlePresetClick = (preset: keyof typeof presets) => {
+    setFormS(presets[preset]);
+    setTouched(false);
+  };
+
   // If parent provides a new value, sync our strings.
   useEffect(() => {
     if (value) setFormS(toStrs(value));
@@ -96,7 +138,6 @@ export default function TrailerInfoForm({
   }, [parsed.numeric, parsed.isValid]);
 
   const setField = (key: keyof TrailerFormStrings, v: string) => {
-    // allow empty string (user clearing), keep whatever they type
     setFormS((prev) => ({ ...prev, [key]: v }));
   };
 
@@ -110,6 +151,22 @@ export default function TrailerInfoForm({
   return (
     <form className="card-inner" onSubmit={handleSubmit}>
       <div className="card-header small">Trailer Information</div>
+
+      {/* 🔹 Botones de presets */}
+      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "10px" }}>
+        <button type="button" className="btn btn-ghost" onClick={() => handlePresetClick("standardTruck")}>
+          Standard Truck
+        </button>
+        <button type="button" className="btn btn-ghost" onClick={() => handlePresetClick("smallTruck")}>
+          Small Truck
+        </button>
+        <button type="button" className="btn btn-ghost" onClick={() => handlePresetClick("van")}>
+          Van
+        </button>
+        <button type="button" className="btn btn-ghost" onClick={() => handlePresetClick("custom")}>
+          Custom / Manual
+        </button>
+      </div>
 
       <div className="card-body">
         <label>
